@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Our Space ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        butter: {
+                            50: '#fffdf0',
+                            100: '#fff9c2',
+                            200: '#fef08a',
+                            300: '#fde047',
+                        },
+                        blossom: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth transition styling */
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tab-active {
+            color: #e11d48;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-amber-50 via-rose-50 to-pink-100 min-h-screen font-sans text-slate-800 pb-28">
+
+    <!-- Mobile Viewport Container -->
+    <div class="max-w-md mx-auto min-h-screen flex flex-col justify-between">
+
+        <!-- Top Sticky Header -->
+        <header class="sticky top-0 z-30 bg-white/70 backdrop-blur-md border-b border-rose-100 px-4 py-3 shadow-xs">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-200 to-rose-300 flex items-center justify-center text-base shadow-xs">
+                        🌸
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">Our Space</h1>
+                        <p id="subheading-role" class="text-[11px] text-rose-500 font-medium">Logged in</p>
+                    </div>
+                </div>
+
+                <!-- Profile Switcher Toggle -->
+                <div class="flex items-center p-1 bg-amber-100/60 rounded-full border border-rose-200/60">
+                    <button id="btn-surprise" onclick="switchUser('Surprise')"
+                        class="px-3 py-1 rounded-full text-xs font-semibold transition-all">Surprise</button>
+                    <button id="btn-jay" onclick="switchUser('Jay')"
+                        class="px-3 py-1 rounded-full text-xs font-semibold transition-all">Jay</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Tab Panels -->
+        <main class="flex-1 p-4 space-y-4">
+
+            <!-- ================= TAB 1: SCHEDULE & AVAILABILITY ================= -->
+            <section id="panel-schedule" class="space-y-4">
+                <!-- Add Event Card -->
+                <div class="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-rose-100/80 shadow-sm space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add Time Block or Plan
+                    </h2>
+                    <input id="sched-title" type="text" placeholder="Plan / Activity (e.g., Dinner, Study block)"
+                        class="w-full text-sm px-3.5 py-2.5 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <select id="sched-type"
+                            class="text-xs px-3 py-2 rounded-2xl bg-amber-50/40 border border-amber-200/50 text-slate-700 focus:outline-none">
+                            <option value="Together time">❤️ Together time</option>
+                            <option value="Busy time">🔒 Busy time</option>
+                            <option value="Open time">✨ Open time</option>
+                        </select>
+                        <input id="sched-datetime" type="text" placeholder="When? (e.g. Fri 7pm)"
+                            class="text-xs px-3 py-2 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none" />
+                    </div>
+
+                    <button onclick="addScheduleItem()"
+                        class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-rose-300 to-pink-300 hover:opacity-95 font-semibold text-xs text-slate-800 shadow-xs transition">
+                        Add to Schedule
+                    </button>
+                </div>
+
+                <!-- Schedule Items List -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between px-1">
+                        <h3 class="text-sm font-bold text-slate-800">Timeline</h3>
+                        <span id="sched-count"
+                            class="text-[11px] font-semibold text-rose-500 bg-rose-100/60 px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="schedule-list" class="space-y-2"></div>
+                </div>
+            </section>
+
+            <!-- ================= TAB 2: DATES & LATE NIGHTS ================= -->
+            <section id="panel-dates" class="space-y-4 hidden">
+                <!-- Add Date Card -->
+                <div class="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-rose-100/80 shadow-sm space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Wishlist an Idea
+                    </h2>
+                    <input id="date-title" type="text" placeholder="Idea (e.g., Stargazing, Pottery class)"
+                        class="w-full text-sm px-3.5 py-2.5 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <select id="date-category"
+                            class="text-xs px-3 py-2 rounded-2xl bg-amber-50/40 border border-amber-200/50 text-slate-700 focus:outline-none">
+                            <option value="Date Night">🌹 Date Night & Outing</option>
+                            <option value="Late Night">🌙 Late Night Activity</option>
+                            <option value="Weekend">🏖️ Weekend Getaway</option>
+                        </select>
+                        <input id="date-target" type="text" placeholder="Target date / soon"
+                            class="text-xs px-3 py-2 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none" />
+                    </div>
+
+                    <button onclick="addDateItem()"
+                        class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-rose-300 to-pink-300 hover:opacity-95 font-semibold text-xs text-slate-800 shadow-xs transition">
+                        Save Activity
+                    </button>
+                </div>
+
+                <!-- Date Ideas List -->
+                <div class="space-y-2.5">
+                    <h3 class="text-sm font-bold text-slate-800 px-1">Our Outing & Late-Night List</h3>
+                    <div id="dates-list" class="space-y-2"></div>
+                </div>
+            </section>
+
+            <!-- ================= TAB 3: DINNER & MENU ================= -->
+            <section id="panel-menu" class="space-y-4 hidden">
+                <!-- Add Meal Card -->
+                <div class="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-rose-100/80 shadow-sm space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                        <i data-lucide="utensils" class="w-3.5 h-3.5"></i> Plan Dinner
+                    </h2>
+                    <input id="menu-title" type="text" placeholder="Dish or Restaurant (e.g. Creamy pasta, Sushi)"
+                        class="w-full text-sm px-3.5 py-2.5 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <select id="menu-type"
+                            class="text-xs px-3 py-2 rounded-2xl bg-amber-50/40 border border-amber-200/50 text-slate-700 focus:outline-none">
+                            <option value="Cooking Together">👩‍🍳 Cook Together</option>
+                            <option value="Takeout / Dine Out">🛵 Takeout / Restaurant</option>
+                            <option value="Jay Cooks">Jay's Turn</option>
+                            <option value="Surprise Cooks">Surprise's Turn</option>
+                        </select>
+                        <input id="menu-day" type="text" placeholder="Day (e.g. Tonight, Friday)"
+                            class="text-xs px-3 py-2 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none" />
+                    </div>
+
+                    <button onclick="addMenuItem()"
+                        class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-rose-300 to-pink-300 hover:opacity-95 font-semibold text-xs text-slate-800 shadow-xs transition">
+                        Add to Menu
+                    </button>
+                </div>
+
+                <div class="space-y-2.5">
+                    <h3 class="text-sm font-bold text-slate-800 px-1">Upcoming Meals</h3>
+                    <div id="menu-list" class="space-y-2"></div>
+                </div>
+            </section>
+
+            <!-- ================= TAB 4: GROCERY & ERRANDS ================= -->
+            <section id="panel-grocery" class="space-y-4 hidden">
+                <!-- Quick Add Item -->
+                <div class="bg-white/80 backdrop-blur-sm p-4 rounded-3xl border border-rose-100/80 shadow-sm space-y-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                        <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> Grocery & Errands
+                    </h2>
+                    <div class="flex gap-2">
+                        <input id="grocery-item" type="text" placeholder="Item or chore (e.g., Oat milk, Strawberries)"
+                            class="flex-1 text-sm px-3.5 py-2.5 rounded-2xl bg-amber-50/40 border border-amber-200/50 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+                        <button onclick="addGroceryItem()"
+                            class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 to-rose-300 font-semibold text-xs text-slate-800 shadow-xs">
+                            Add
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between px-1">
+                        <h3 class="text-sm font-bold text-slate-800">Checklist</h3>
+                        <button onclick="clearCompletedGroceries()"
+                            class="text-[11px] text-rose-500 hover:underline">Clear checked</button>
+                    </div>
+                    <div id="grocery-list" class="space-y-2"></div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Mobile Tab Bar -->
+        <nav
+            class="fixed bottom-0 left-0 right-0 z-30 bg-white/80 backdrop-blur-lg border-t border-rose-100/80 shadow-lg">
+            <div class="max-w-md mx-auto grid grid-cols-4 py-2 px-1 text-center">
+
+                <button onclick="switchTab('schedule')" id="tab-schedule"
+                    class="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-rose-500 transition">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span class="text-[10px] font-medium mt-1">Schedule</span>
+                </button>
+
+                <button onclick="switchTab('dates')" id="tab-dates"
+                    class="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-rose-500 transition">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                    <span class="text-[10px] font-medium mt-1">Dates</span>
+                </button>
+
+                <button onclick="switchTab('menu')" id="tab-menu"
+                    class="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-rose-500 transition">
+                    <i data-lucide="utensils" class="w-5 h-5"></i>
+                    <span class="text-[10px] font-medium mt-1">Dinners</span>
+                </button>
+
+                <button onclick="switchTab('grocery')" id="tab-grocery"
+                    class="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-rose-500 transition">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span class="text-[10px] font-medium mt-1">Groceries</span>
+                </button>
+
+            </div>
+        </nav>
+
+    </div>
+
+    <script>
+        // --- STATE MANAGEMENT ---
+        let currentUser = localStorage.getItem('ourSpace_user') || 'Surprise';
+        let currentTab = 'schedule';
+
+        let schedule = JSON.parse(localStorage.getItem('ourSpace_schedule')) || [
+            { id: 1, title: 'Friday Dinner & Stroll', type: 'Together time', datetime: 'Fri 19:00', by: 'Surprise' },
+            { id: 2, title: 'Work & Study Sprint', type: 'Busy time', datetime: 'Sat 10:00 - 13:00', by: 'Surprise' },
+            { id: 3, title: 'Lazy Afternoon / Free to Hang', type: 'Open time', datetime: 'Sat 14:00+', by: 'Jay' }
+        ];
+
+        let dates = JSON.parse(localStorage.getItem('ourSpace_dates')) || [
+            { id: 1, title: 'Midnight Stargazing & Music', category: 'Late Night', target: 'Next clear night', by: 'Jay' },
+            { id: 2, title: 'Try that new Italian spot', category: 'Date Night', target: 'This weekend', by: 'Surprise' }
+        ];
+
+        let menu = JSON.parse(localStorage.getItem('ourSpace_menu')) || [
+            { id: 1, title: 'Creamy Garlic Alfredo Pasta', type: 'Cooking Together', day: 'Friday', by: 'Jay' }
+        ];
+
+        let groceries = JSON.parse(localStorage.getItem('ourSpace_groceries')) || [
+            { id: 1, title: 'Fresh Strawberries', done: false, by: 'Jay' },
+            { id: 2, title: 'Coffee beans & Oat milk', done: true, by: 'Surprise' }
+        ];
+
+        function saveAll() {
+            localStorage.setItem('ourSpace_user', currentUser);
+            localStorage.setItem('ourSpace_schedule', JSON.stringify(schedule));
+            localStorage.setItem('ourSpace_dates', JSON.stringify(dates));
+            localStorage.setItem('ourSpace_menu', JSON.stringify(menu));
+            localStorage.setItem('ourSpace_groceries', JSON.stringify(groceries));
+            render();
+        }
+
+        // --- USER SWITCHER ---
+        function switchUser(user) {
+            currentUser = user;
+            saveAll();
+        }
+
+        // --- TAB SWITCHER ---
+        function switchTab(tab) {
+            currentTab = tab;
+            const tabs = ['schedule', 'dates', 'menu', 'grocery'];
+            tabs.forEach(t => {
+                document.getElementById(`panel-${t}`).classList.toggle('hidden', t !== tab);
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.className = "flex flex-col items-center justify-center py-1 text-rose-500 font-bold transition transform -translate-y-0.5";
+                } else {
+                    btn.className = "flex flex-col items-center justify-center py-1 text-slate-400 hover:text-rose-400 transition";
+                }
+            });
+            lucide.createIcons();
+        }
+
+        // --- ITEM ACTIONS ---
+        function addScheduleItem() {
+            const title = document.getElementById('sched-title').value.trim();
+            const type = document.getElementById('sched-type').value;
+            const datetime = document.getElementById('sched-datetime').value.trim();
+            if (!title) return;
+            schedule.unshift({ id: Date.now(), title, type, datetime: datetime || 'Flexible', by: currentUser });
+            document.getElementById('sched-title').value = '';
+            document.getElementById('sched-datetime').value = '';
+            saveAll();
+        }
+
+        function deleteScheduleItem(id) {
+            schedule = schedule.filter(item => item.id !== id);
+            saveAll();
+        }
+
+        function addDateItem() {
+            const title = document.getElementById('date-title').value.trim();
+            const category = document.getElementById('date-category').value;
+            const target = document.getElementById('date-target').value.trim();
+            if (!title) return;
+            dates.unshift({ id: Date.now(), title, category, target: target || 'Someday soon', by: currentUser });
+            document.getElementById('date-title').value = '';
+            document.getElementById('date-target').value = '';
+            saveAll();
+        }
+
+        function deleteDateItem(id) {
+            dates = dates.filter(item => item.id !== id);
+            saveAll();
+        }
+
+        function addMenuItem() {
+            const title = document.getElementById('menu-title').value.trim();
+            const type = document.getElementById('menu-type').value;
+            const day = document.getElementById('menu-day').value.trim();
+            if (!title) return;
+            menu.unshift({ id: Date.now(), title, type, day: day || 'Flexible', by: currentUser });
+            document.getElementById('menu-title').value = '';
+            document.getElementById('menu-day').value = '';
+            saveAll();
+        }
+
+        function deleteMenuItem(id) {
+            menu = menu.filter(item => item.id !== id);
+            saveAll();
+        }
+
+        function addGroceryItem() {
+            const input = document.getElementById('grocery-item');
+            const title = input.value.trim();
+            if (!title) return;
+            groceries.unshift({ id: Date.now(), title, done: false, by: currentUser });
+            input.value = '';
+            saveAll();
+        }
+
+        function toggleGrocery(id) {
+            const item = groceries.find(g => g.id === id);
+            if (item) item.done = !item.done;
+            saveAll();
+        }
+
+        function clearCompletedGroceries() {
+            groceries = groceries.filter(g => !g.done);
+            saveAll();
+        }
+
+        // --- RENDER LOGIC ---
+        function render() {
+            // Profile Buttons
+            const btnS = document.getElementById('btn-surprise');
+            const btnJ = document.getElementById('btn-jay');
+            const sub = document.getElementById('subheading-role');
+
+            if (currentUser === 'Surprise') {
+                btnS.className = "px-3 py-1 rounded-full text-xs font-semibold bg-white text-rose-500 shadow-xs";
+                btnJ.className = "px-3 py-1 rounded-full text-xs font-semibold text-slate-500 hover:text-slate-800";
+                sub.innerText = "Hey Surprise 💛";
+            } else {
+                btnJ.className = "px-3 py-1 rounded-full text-xs font-semibold bg-white text-rose-500 shadow-xs";
+                btnS.className = "px-3 py-1 rounded-full text-xs font-semibold text-slate-500 hover:text-slate-800";
+                sub.innerText = "Hey Jay 🌸";
+            }
+
+            // Schedule Rendering
+            document.getElementById('sched-count').innerText = schedule.length;
+            document.getElementById('schedule-list').innerHTML = schedule.map(item => {
+                let badgeColor = "bg-rose-100/70 text-rose-700 border-rose-200";
+                if (item.type === 'Busy time') badgeColor = "bg-slate-100 text-slate-600 border-slate-200";
+                if (item.type === 'Open time') badgeColor = "bg-emerald-100/70 text-emerald-700 border-emerald-200";
+
+                return `
+          <div class="bg-white/80 p-3.5 rounded-2xl border border-rose-100/70 shadow-xs flex items-center justify-between gap-3">
+            <div class="space-y-1 truncate">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}">${item.type}</span>
+                <span class="text-[11px] text-slate-400">by ${item.by}</span>
+              </div>
+              <p class="text-sm font-semibold text-slate-800 truncate">${item.title}</p>
+              <p class="text-xs text-slate-400 flex items-center gap-1">⏰ ${item.datetime}</p>
+            </div>
+            <button onclick="deleteScheduleItem(${item.id})" class="text-slate-300 hover:text-rose-500 transition">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+            }).join('') || '<p class="text-xs text-slate-400 text-center py-4 italic">No schedule blocks added yet.</p>';
+
+            // Dates Rendering
+            document.getElementById('dates-list').innerHTML = dates.map(item => `
+        <div class="bg-white/80 p-3.5 rounded-2xl border border-rose-100/70 shadow-xs flex items-center justify-between gap-3">
+          <div class="space-y-1 truncate">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100/80 text-amber-800 border border-amber-200">${item.category}</span>
+              <span class="text-[11px] text-slate-400">wished by ${item.by}</span>
+            </div>
+            <p class="text-sm font-semibold text-slate-800 truncate">${item.title}</p>
+            <p class="text-xs text-slate-400 flex items-center gap-1">📍 ${item.target}</p>
+          </div>
+          <button onclick="deleteDateItem(${item.id})" class="text-slate-300 hover:text-rose-500 transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `).join('') || '<p class="text-xs text-slate-400 text-center py-4 italic">No date or night ideas yet.</p>';
+
+            // Menu Rendering
+            document.getElementById('menu-list').innerHTML = menu.map(item => `
+        <div class="bg-white/80 p-3.5 rounded-2xl border border-rose-100/70 shadow-xs flex items-center justify-between gap-3">
+          <div class="space-y-1 truncate">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-100/80 text-pink-700 border border-pink-200">${item.type}</span>
+              <span class="text-[11px] text-slate-400">by ${item.by}</span>
+            </div>
+            <p class="text-sm font-semibold text-slate-800 truncate">${item.title}</p>
+            <p class="text-xs text-slate-400 flex items-center gap-1">🍽️ ${item.day}</p>
+          </div>
+          <button onclick="deleteMenuItem(${item.id})" class="text-slate-300 hover:text-rose-500 transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `).join('') || '<p class="text-xs text-slate-400 text-center py-4 italic">No meal plans added yet.</p>';
+
+            // Grocery Rendering
+            document.getElementById('grocery-list').innerHTML = groceries.map(item => `
+        <div class="bg-white/80 p-3 rounded-2xl border border-rose-100/70 shadow-xs flex items-center justify-between gap-3 ${item.done ? 'opacity-50' : ''}">
+          <div class="flex items-center gap-3 truncate">
+            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleGrocery(${item.id})" 
+              class="w-4 h-4 rounded-md accent-rose-400 cursor-pointer" />
+            <span class="text-sm font-medium ${item.done ? 'line-through text-slate-400' : 'text-slate-800'} truncate">${item.title}</span>
+          </div>
+          <span class="text-[10px] text-slate-300">${item.by}</span>
+        </div>
+      `).join('') || '<p class="text-xs text-slate-400 text-center py-4 italic">Grocery list is clear!</p>';
+
+            lucide.createIcons();
+        }
+
+        // Initial render & active tab trigger
+        switchTab('schedule');
+        render();
+    </script>
+</body>
+
+</html>
